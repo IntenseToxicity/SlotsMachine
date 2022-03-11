@@ -14,10 +14,11 @@ Description:
     It has one (1) save file currently.
 """
 global NEW_USER_FLAG
-NEW_USER_FLAG = False
+global start_flag
+start_flag = True
 
 config = configuration.conf
-config.read('.Slots\\Slot_Settings2.ini')
+config.read('.Slots\\Slot_settings.ini')
 
 
 # TODO: find a way to allow multiple saves and
@@ -119,7 +120,27 @@ class SlotMachine:  # Main Class
             elif answer in ["no", "n", "quit", "leave", "walk", "walk away"]:  # Print current wallet, return FALSE
                 print(f"\nYou ended the game with {self.currency}{self.current_stake} in your hand. Great job!")
 
-                saves.save_information(self.current_jackpot, self.current_stake, Player_name)
+                if save_value == 0:
+                    saves.save_information(
+                        self.current_jackpot,
+                        self.current_stake,
+                        configuration.conf.get('saveOne', 'name'),
+                        0
+                    )
+                elif save_value == 1:
+                    saves.save_information(
+                        self.current_jackpot,
+                        self.current_stake,
+                        configuration.conf.get('saveTwo', 'name'),
+                        1
+                    )
+                else:
+                    saves.save_information(
+                        self.current_jackpot,
+                        self.current_stake,
+                        configuration.conf.get('saveThree', 'name'),
+                        2
+                    )
 
                 time.sleep(5)  # Don't quit immedietely. Let the player see what they ended with.
                 return False  # No new rounds. End Game.
@@ -207,11 +228,28 @@ If you want to change the default values, open the hidden folder .Slots in the s
 
         :return: another round.
         """
-        global NEW_USER_FLAG
-        if NEW_USER_FLAG:
-            self.current_stake = int(configuration.conf.get('Initial_Values', 'initial_stake'))
-            self.current_jackpot = int(configuration.conf.get('Initial_Values', 'initial_jackpot'))
-            NEW_USER_FLAG = False
+        global start_flag
+        if start_flag == True:
+            if save_value == 0:
+                self.current_stake = int(configuration.conf.get('saveOne', 'wallet'))
+                while True:
+                    try:
+                        self.current_jackpot = int(configuration.conf.get('MACHINE', 'jackpot'))
+                        break
+                    except configparser.NoSectionError:
+                        self.current_jackpot = int(configuration.conf.get('Initial_Values', 'initial_jackpot'))
+                        break
+                start_flag = False
+            elif save_value == 1:
+                self.current_stake = int(configuration.conf.get('saveTwo', 'wallet'))
+                self.current_jackpot = int(configuration.conf.get('MACHINE', 'jackpot'))
+            elif save_value == 2:
+                self.current_stake = int(configuration.conf.get('saveThree', 'wallet'))
+                self.current_jackpot = int(configuration.conf.get('MACHINE', 'jackpot'))
+            else:
+                self.current_stake = int(configuration.conf.get('Initial_Values', 'initial_stake'))
+                self.current_jackpot = int(configuration.conf.get('Initial_Values', 'initial_jackpot'))
+                NEW_USER_FLAG = False
         while self.current_stake and self.keep_playing:
             if self.current_stake > 1:  # If money left, keep playing
                 self._play_round()
@@ -227,7 +265,6 @@ If you want to change the default values, open the hidden folder .Slots in the s
 
 # If this is run on its own and not as a library, print rules, ask if they want to play, and begin the slots game.
 if __name__ == '__main__':
-
     # Debug
     class Debug:
         if config.get('Debug', 'Type') == '1':
@@ -277,7 +314,7 @@ if __name__ == '__main__':
                             elif save_slot.lower() in ['three', '3']:
                                 save_value = 2
 
-                            if configuration.saves()[save_value] in ['One', 'Two', 'Three']:
+                            if configuration.saves()[save_value] in ['one', 'One', 'two', 'Two', 'three', 'Three']:
                                 choice = input(f"Do you wish to rename your save? ")
                                 if choice.lower() in ['yes', 'y']:
                                     rename = input(f"What do you want to name your save? ")
@@ -288,7 +325,7 @@ if __name__ == '__main__':
                                     elif save_value == 2:
                                         configuration.conf.set('saveThree', 'name', rename)
 
-                                    with open('.Slots/Slot_settings2.ini', 'w') as configfile:
+                                    with open('.Slots/Slot_settings.ini', 'w') as configfile:
                                         configuration.conf.write(configfile)
                             break
 

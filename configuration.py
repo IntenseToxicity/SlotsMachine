@@ -2,9 +2,9 @@ import os
 import ctypes
 import configparser
 
-conf = configparser.ConfigParser(allow_no_value=True)
+conf = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 
-if not os.path.exists('.Slots/Slot_settings2.ini'):
+if not os.path.exists('.Slots/Slot_settings.ini'):
     if not os.path.exists('.Slots'):
         os.mkdir('.Slots')
         FILE_ATTRIBUTE_HIDDEN = 0x02
@@ -45,23 +45,29 @@ if not os.path.exists('.Slots/Slot_settings2.ini'):
 
     conf['CURRENCY'] = {
         '; You can change to your local currency by replacing $ with yours.': None,
-        '; Only the following work right now:': None,
+        '; Only the following work right now': None,
         '; Dollar, Euro, Pound Sterling, Rupee, Rial': None,
         '; Sheqel, Yen, Won, Kip, Tugrik, Naira, Peso': None,
         'TYPE': 'Dollar'
     }
 
     conf['saveOne'] = {
+        '; Do not edit this section please.': None,
+        '; I have yet to learn how to encrypt this to prevent cheating.': None,
         'Name': 'One',
         'Wallet': '50',
     }
 
     conf['saveTwo'] = {
+        '; Do not edit this section please.': None,
+        '; I have yet to learn how to encrypt this to prevent cheating.': None,
         'Name': 'Two',
         'Wallet': '50',
     }
 
     conf['saveThree'] = {
+        '; Do not edit this section please.': None,
+        '; I have yet to learn how to encrypt this to prevent cheating.': None,
         'Name': 'Three',
         'Wallet': '50',
     }
@@ -71,11 +77,11 @@ if not os.path.exists('.Slots/Slot_settings2.ini'):
         'Type': '0'
     }
 
-    with open('.Slots/Slot_settings2.ini', 'w') as configfile:
+    with open('.Slots/Slot_settings.ini', 'w') as configfile:
         conf.write(configfile)
 
 else:
-    conf.read('.Slots/Slot_Settings2.ini')
+    conf.read('.Slots/Slot_settings.ini')
 
 
 # ------------------- CURRENCY TYPE -------------------------

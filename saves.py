@@ -32,12 +32,19 @@ def saves():
 saves()
 
 
-def save_information(current_jackpot, current_stake, player_name):
-    configuration.conf['PLAYER'] = {
+def save_information(current_jackpot, current_stake, player_name, save_slot):
+    if save_slot == 0:
+        save_name = 'saveOne'
+    elif save_slot == 1:
+        save_name = 'saveTwo'
+    else:
+        save_name = 'saveThree'
+
+    configuration.conf[save_name] = {
         '; Do not edit this section please.': None,
         '; I have yet to learn how to encrypt this to prevent cheating.': None,
-        'NAME': str(player_name.lower()),
-        'WALLET': str(current_stake)
+        'name': player_name.lower(),
+        'wallet': str(current_stake)
     }
 
     configuration.conf['MACHINE'] = {
@@ -46,10 +53,7 @@ def save_information(current_jackpot, current_stake, player_name):
         'JACKPOT': str(current_jackpot)
     }
 
-    configuration.conf['Debug'] = {
-        '; Debug testing. Set to 1 to show debug messages.': None,
-        'Type': '0'
-    }
-
-    with open('.Slots/Slot_settings2.ini', 'w') as configfile:  # Write the player's wallet to file.
+    with open('.Slots/Slot_settings.ini', 'w') as configfile:  # Write the player's wallet to file.
         configuration.conf.write(configfile)
+
+    print("Game Saved!")

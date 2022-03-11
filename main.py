@@ -3,6 +3,8 @@ import time
 import os
 from enum import Enum
 import configparser
+
+import commands
 import configuration
 import saves
 
@@ -19,34 +21,6 @@ start_flag = True
 
 config = configuration.conf
 config.read('.Slots\\Slot_settings.ini')
-
-
-# TODO: find a way to allow multiple saves and
-#  keep SlotMachine Jackpot same through all members.
-
-def rules():
-    """
-    This function stores the game's rules and provides them when requested.
-    :return: The game rules
-    """
-    rules_str = f'''
-Welcome to Python Slots!
-
-Answer with yes or no. You can type ? for more options.
-There is no case sensitivity, type it however you like!
-
-To win you must get one of the following combinations:
-BAR\tBAR\tBAR\t\tpays\t{SlotMachine.currency}{configuration.conf.get('Reel_Payouts', 'BAR')}
-BELL\tBELL\tBELL/BAR\tpays\t{SlotMachine.currency}{configuration.conf.get('Reel_Payouts', 'BELL')}
-PLUM\tPLUM\tPLUM/BAR\tpays\t{SlotMachine.currency}{configuration.conf.get('Reel_Payouts', 'PLUM')}
-ORANGE\tORANGE\tORANGE/BAR\tpays\t{SlotMachine.currency}{configuration.conf.get('Reel_Payouts', 'ORANGE')}
-LEMON\tLEMON\tLEMON\tpays\t{SlotMachine.currency}{configuration.conf.get('Reel_Payouts', 'LEMON')}
-CHERRY\tCHERRY\tCHERRY\t\tpays\t{SlotMachine.currency}{configuration.conf.get('CHERRY_PAYOUTS', '3_CHERRY')}
-CHERRY\tCHERRY\t  -\t\tpays\t{SlotMachine.currency}{configuration.conf.get('CHERRY_PAYOUTS', '2_CHERRY')}
-CHERRY\t  -\t  -\t\tpays\t{SlotMachine.currency}{configuration.conf.get('CHERRY_PAYOUTS', '1_CHERRY')}
-7\t  7\t  7\t\tpays\t The Jackpot!
-'''
-    return rules_str
 
 
 class SlotMachine:  # Main Class
@@ -151,19 +125,13 @@ class SlotMachine:  # Main Class
 
             elif answer in ["rules", "instructions", "r", "i"]:  # If see rules, clear console, print rules.
                 os.system('cls' if os.name == 'nt' else 'clear')  # Clear console.
-                print(rules())  # Print the rules
+                commands.rules()  # Print the rules
 
             elif answer in ["?", "help"]:
-                print(f'''
-Welcome to help. All available options are:
-"help or ?" are options for Help.
-"quit, leave, walk, or walk away" are options to end game.
-"Rules, Instructions, I, or R" are options for the rules and instructions of the game.
-"check, wallet, or money" are options to view your wallet/funds.
-"no or n" are options to not continue playing. Similar to quit.
-"yes or y" are options to play another round.
-If you want to change the default values, open the hidden folder .Slots in the same directory the exe is in.
-''')
+                commands.help()
+
+            elif answer in ["about", "info"]:
+                commands.about()
 
             else:  # If not a proper answer, print error.
                 print("Whoops! Didn't get that.")  # Print Error
@@ -282,7 +250,7 @@ if __name__ == '__main__':
 
 
     # [Below] Print the rules initially.
-    print(rules())  # Print the rules
+    commands.rules()  # Print the rules
 
     # Get user input and validate. + loading or resetting of save.
     while True:

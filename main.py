@@ -15,12 +15,11 @@ Description:
     It uses a config file.
     It has one (1) save file currently.
 """
-global NEW_USER_FLAG
-global start_flag
 start_flag = True
 
 config = configuration.conf
-config.read('.Slots\\Slot_settings.ini')
+dir_path = '%s\\InsanityNet' % os.environ['APPDATA']
+config.read(f'{dir_path}\\Python_Slots_Settings.ini')
 
 
 class SlotMachine:  # Main Class
@@ -123,7 +122,7 @@ class SlotMachine:  # Main Class
                 os.system('cls' if os.name == 'nt' else 'clear')  # Clear Console
                 print(f"\nYou currently have {self.currency}{self.current_stake}.")  # Print Wallet.
 
-            elif answer in ["rules", "instructions", "r", "i"]:  # If see rules, clear console, print rules.
+            elif answer in ["rules", "instructions", "r", "i"]:  # If choice is rules clear the console and print rules.
                 os.system('cls' if os.name == 'nt' else 'clear')  # Clear console.
                 commands.rules()  # Print the rules
 
@@ -143,9 +142,11 @@ class SlotMachine:  # Main Class
         :return: Sends the randomly selected values to the _adjust_score() function to determine win or loss.
         """
         # Randomly chooses the slot machine values for first, second, and third reels.
-        first, second, third = random.choice(SlotMachine._values),\
-                                random.choice(SlotMachine._values),\
-                                random.choice(SlotMachine._values)
+        first, second, third = {
+            random.choice(SlotMachine._values),
+            random.choice(SlotMachine._values),
+            random.choice(SlotMachine._values)
+        }
 
         # Sends the values first, second, and third to the _adjust_score function to determin win or loss.
         self._adjust_score(first, second, third)
@@ -165,7 +166,8 @@ class SlotMachine:  # Main Class
             if second == SlotMachine.Reel.CHERRY:  # If CHERRY, CHERRY, ANY then win 5
                 win = int(configuration.conf.get('CHERRY_PAYOUTS', '3_CHERRY')) \
                     if third == SlotMachine.Reel.CHERRY \
-                    else int(configuration.conf.get('CHERRY_PAYOUTS', '2_CHERRY'))  # IF CHERRY, CHERRY, CHERRY THEN win 7
+                    else int(
+                    configuration.conf.get('CHERRY_PAYOUTS', '2_CHERRY'))  # IF CHERRY, CHERRY, CHERRY THEN win 7
             else:
                 win = int(configuration.conf.get('CHERRY_PAYOUTS', '1_CHERRY'))  # IF CHERRY, ANY, ANY THEN win 2
 
@@ -197,7 +199,7 @@ class SlotMachine:  # Main Class
         :return: another round.
         """
         global start_flag
-        if start_flag == True:
+        if start_flag:
             if save_value == 0:
                 self.current_stake = int(configuration.conf.get('saveOne', 'wallet'))
                 while True:
@@ -217,7 +219,6 @@ class SlotMachine:  # Main Class
             else:
                 self.current_stake = int(configuration.conf.get('Initial_Values', 'initial_stake'))
                 self.current_jackpot = int(configuration.conf.get('Initial_Values', 'initial_jackpot'))
-                NEW_USER_FLAG = False
         while self.current_stake and self.keep_playing:
             if self.current_stake > 1:  # If money left, keep playing
                 self._play_round()
@@ -293,7 +294,7 @@ if __name__ == '__main__':
                                     elif save_value == 2:
                                         configuration.conf.set('saveThree', 'name', rename)
 
-                                    with open('.Slots/Slot_settings.ini', 'w') as configfile:
+                                    with open('.Slots/Python_Slots_Settings.ini', 'w') as configfile:
                                         configuration.conf.write(configfile)
                             break
 

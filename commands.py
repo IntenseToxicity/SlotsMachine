@@ -14,6 +14,7 @@ Welcome to help. All available options are:
 If you want to change the default values, open the hidden folder .Slots in the same directory the exe is in.
 ''')
 
+
 def rules():
     """
     This function stores the game's rules and provides them when requested.
@@ -50,4 +51,10 @@ Welcome to the Python Slots about page.
 
 Thank you to everyone who plays this and especially to those who supported me while I learned python and made this.
 \t- James Dandy
+''')
+
+
+def where_stored():
+    print(f'''
+Slots stores configuration and save information in %appdata%\\InsanityNet\\.Slots\\
 ''')

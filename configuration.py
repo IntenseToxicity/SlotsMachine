@@ -4,9 +4,11 @@ import configparser
 
 conf = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 
-if not os.path.exists('.Slots/Slot_settings.ini'):
-    if not os.path.exists('.Slots'):
-        os.mkdir('.Slots')
+dir_path = '%s\\InsanityNet' % os.environ['APPDATA']
+
+if not os.path.exists(f'{dir_path}\\Python_Slots_Settings.ini'):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
         FILE_ATTRIBUTE_HIDDEN = 0x02
         ret = ctypes.windll.kernel32.SetFileAttributesW('.Slots', FILE_ATTRIBUTE_HIDDEN)
     conf['Initial_Values'] = {
@@ -77,11 +79,11 @@ if not os.path.exists('.Slots/Slot_settings.ini'):
         'Type': '0'
     }
 
-    with open('.Slots/Slot_settings.ini', 'w') as configfile:
+    with open(f'{dir_path}\\Python_Slots_Settings.ini', 'w') as configfile:
         conf.write(configfile)
 
 else:
-    conf.read('.Slots/Slot_settings.ini')
+    conf.read(f'{dir_path}\\Python_Slots_Settings.ini')
 
 
 # ------------------- CURRENCY TYPE -------------------------

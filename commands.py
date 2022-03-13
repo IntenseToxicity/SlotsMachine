@@ -58,3 +58,4 @@ def where_stored():
     print(f'''
 Slots stores configuration and save information in %appdata%\\InsanityNet\\.Slots\\
 ''')
+

@@ -8,6 +8,9 @@ import commands
 import configuration
 import saves
 
+import tkinter as tk
+import winsound as ws
+
 """
 Name: Python Slots
 Description:
